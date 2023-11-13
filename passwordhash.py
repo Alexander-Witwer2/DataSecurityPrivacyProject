@@ -3,6 +3,9 @@ import hashlib
 import mysql.connector
 from mysql.connector import Error
 
+user = False
+admin = False
+
 username = input("Input Username\n")#Ask user for their username
 password = input("Input a password\n")#Ask user for their password
 
@@ -24,6 +27,7 @@ try:#Try to connect to mysql
     if connection.is_connected():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version ", db_Info)
+        cursor = connection.cursor(buffered=True)
         cursor = connection.cursor() 
         query = 'SELECT username,passwordhash FROM users'#Query to get relevant user data from the users table
         cursor.execute(query)
@@ -38,8 +42,25 @@ try:#Try to connect to mysql
                 for a in record:#Loop through admin table results
                     if(a == usernameTuple):
                         print("User is Admin")
+                        admin = True
                         break
+                user = True
                 break
+        if user is True and admin is not True:
+            que = 'SELECT gender,age,weight,height,health_history FROM project'
+            cursor.execute(que)
+            res = cursor.fetchall()
+            for r in res:
+                print(r)
+                print('\n')
+        elif admin is True:
+            que = 'SELECT * FROM project'
+            cursor.execute(que)
+            res = cursor.fetchall()
+            print(res)
+            for r in res:
+                print(r)
+                print('\n')
 except Error as e:
     print("Error while connecting to MySQL", e)
 finally:#Closes connection

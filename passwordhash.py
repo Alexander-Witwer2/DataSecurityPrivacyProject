@@ -47,7 +47,7 @@ try:#Try to connect to mysql
                 user = True
                 break
         if user is True and admin is not True:
-            que = 'SELECT gender,age,weight,height,health_history FROM project'
+            que = 'SELECT gender,age,weight,height,health_history,hashMAC FROM project'
             cursor.execute(que)
             res = cursor.fetchall()
             for r in res:
